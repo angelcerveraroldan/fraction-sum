@@ -21,14 +21,14 @@ object PrecalculateData {
       .filterNot { case (a, b) => a == b }
   }
 
-  // Generate a hashmap in the form (n, Seq(sets of fractions that will add to 1/n))
+  // Generate a hashmap in the form (n, Seq((a_1, b_1), (a_2, b_2), ...)), where 1/n = 1/a_i + 1/b_i for any i in the range
   def prepareMapEquivalence(limit: Int): Map[Int, Seq[(Int, Int)]] =
     (2 to limit).par
       .map(n =>
         (
-          n,
+          n, // key
           // Remove tuples out of scope
-          nextSeq(n).filter(t => t._2 <= limit)
+          nextSeq(n).filter(t => t._2 <= limit) // value
         )
       )
       .filterNot { case (_, b) => b.isEmpty }

@@ -7,7 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class EnrichTest extends AnyWordSpec with Matchers {
   // Add the multiple fractions in the form 1/n, given the n's
-  def addDenominators(denominators: Seq[Int]) = {
+  def addDenominators(denominators: Seq[Int]): Fraction = {
     // Turn every item into a fraction
     denominators
       .map(d => Fraction(1, d))
@@ -19,20 +19,27 @@ class EnrichTest extends AnyWordSpec with Matchers {
     "limit 100" in {
       val data = prepareMapEquivalence(100)
 
-      (0 to 10)
-        .map(x => enrich(Seq(2, 2), data))
-        .foreach(x =>
-          println(s"${addDenominators(x)} from $x, with min 1/${x.max} ")
-        )
+      val answer =
+        (0 to 10)
+          .map(x => enrich(Seq(2, 2), data))
+
+      answer.foreach(x =>
+        println(s"${addDenominators(x)} from $x, with min 1/${x.max} ")
+      )
+
+      answer.foreach(x => addDenominators(x) shouldBe Fraction(1, 1))
     }
     "limit 1000" in {
-      val data = prepareMapEquivalence(100)
+      val data = prepareMapEquivalence(1000)
 
-      (0 to 10)
-        .map(x => enrich(Seq(2, 2), data))
-        .foreach(x =>
-          println(s"${addDenominators(x)} from $x, with min 1/${x.max} ")
-        )
+      val answer =
+        (0 to 1000)
+          .map(x => enrich(Seq(2, 2), data))
+
+      answer.foreach(x => addDenominators(x) shouldBe Fraction(1, 1))
+
+      val a = answer.map(x => (x.length, x)).maxBy(_._1)
+      println(a)
     }
   }
 }
