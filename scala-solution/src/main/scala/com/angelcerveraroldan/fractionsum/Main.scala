@@ -11,16 +11,16 @@ List(256, 462, 840, 750, 100, 60, 420, 162, 108, 342, 468, 210, 660, 96, 190, 81
 
 object Main extends App {
   def enrich(
-      denominators: Seq[Int],
-      mappedEquivalence: Map[Int, Seq[DenominatorPair]]
+      denominators: List[Int],
+      mappedEquivalence: Map[Int, List[DenominatorPair]]
   ) = {
     @tailrec
     def recursiveEnrich(
-        unchecked: Seq[Int] = denominators,
-        acc: Seq[Int] = Seq.empty,
-        eq: Map[Int, Seq[DenominatorPair]] = mappedEquivalence
-    ): Seq[Int] = unchecked match {
-      case Seq() =>
+        unchecked: List[Int] = denominators,
+        acc: List[Int] = List.empty,
+        eq: Map[Int, List[DenominatorPair]] = mappedEquivalence
+    ): List[Int] = unchecked match {
+      case Nil =>
         acc
       case _ if !eq.contains(unchecked.head) =>
         recursiveEnrich(unchecked.tail, acc :+ unchecked.head)
@@ -33,8 +33,8 @@ object Main extends App {
         eq(unchecked.head).find(listDoesntContainEither) match {
           case Some((a, b)) =>
             recursiveEnrich(
-              Random.shuffle(acc ++ Seq(a, b) ++ unchecked.tail),
-              Seq.empty
+              Random.shuffle(acc ++ List(a, b) ++ unchecked.tail),
+              List.empty
             )
           case None =>
             recursiveEnrich(unchecked.tail, acc :+ unchecked.head)
